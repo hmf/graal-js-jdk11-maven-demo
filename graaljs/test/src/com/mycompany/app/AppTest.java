@@ -73,7 +73,6 @@ public class AppTest {
 
     private void assertGraalVMOrJDK11() {
         if (System.getProperty("java.vm.name").contains("GraalVM")) {
-            fail("Boohoo");
             return;
         }
         try {
