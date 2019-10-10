@@ -33,10 +33,14 @@ object graaljs extends JavaModule {
     ivy"org.graalvm.js:js:$graalvmVersion",
     ivy"org.graalvm.js:js-scriptengine:$graalvmVersion",
     ivy"org.graalvm.tools:profiler:$graalvmVersion",
-    ivy"org.graalvm.tools:chromeinspector:$graalvmVersion"
+    ivy"org.graalvm.tools:chromeinspector:$graalvmVersion",
+    ivy"org.graalvm.truffle:truffle-api:${graalvmVersion}",  // truffle-api.jar
+    ivy"org.graalvm.sdk:graal-sdk:${graalvmVersion}"         // graal-sdk.jar
   )
 
   // https://github.com/lefou/mill-aspectj/blob/master/aspectj/src/de/tobiasroeser/mill/aspectj/AspectjModule.scala#L47
+  // https://weekly-geekly.github.io/articles/445978/index.html
+
   def graalToolsDeps: T[Agg[Dep]] = T {
     Agg(
       ivy"org.graalvm.compiler:compiler:${graalvmVersion}",    // compiler.jar
@@ -84,14 +88,31 @@ object graaljs extends JavaModule {
 
   lazy val compilerDir = fetch()
 
+  def mdocClasspath: T[Agg[PathRef]] = T {
+    // Same as runClasspath but with mdoc added to ivyDeps from the start
+    // This prevents duplicate, differently versioned copies of scala-library
+    // ending up on the classpath which can happen when resolving separately
+    transitiveLocalClasspath() ++
+      resources() ++
+      localClasspath() ++
+      unmanagedClasspath() ++
+      graalToolsClasspath()
+  }
 
-  lazy val graalArgs = Seq(
+
+
+  lazy val graalArgs = T {
+    val libPaths: String = mdocClasspath().map(_.path.toIO.getAbsolutePath).mkString(java.io.File.pathSeparator)
+    println(s"libPaths = $libPaths  ??????????????????????????????")
+    Seq(
     "-XX:+UnlockExperimentalVMOptions",
     "-XX:+EnableJVMCI",
     // TODO: s"--module-path=${compilerDir}",
+    s"--module-path=$libPaths",
     //s"--upgrade-module-path=${compilerDir}/compiler.jar"
     s"--upgrade-module-path=$compilerDir"
-  )
+    )
+  }
 
 
   override def forkArgs = graalArgs
