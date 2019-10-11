@@ -47,6 +47,9 @@ import javax.script.ScriptEngine;
 import javax.script.Invocable;
 import java.io.IOException;
 import org.graalvm.polyglot.Source;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
 
 /**
  * Simple benchmark for Graal.js via GraalVM Polyglot Context and ScriptEngine.
@@ -130,9 +133,34 @@ public class App {
         }
     }
 
+    static void classPath() {
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(java.io.File.pathSeparator);
+        for (String x: classpathEntries){
+            System.out.println(x);
+        }
+    }
+
+    static void JVMArgs() {
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        List<String> arguments = runtimeMxBean.getInputArguments();
+        for (String x: arguments){
+            System.out.println(x);
+        }
+    }
+
+    static void mainClass() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        String mainClassName = stackTrace[stackTrace.length - 1].getClassName();
+        System.out.println(mainClassName);
+    }
 
     static long benchGraalPolyglotContext() throws IOException {
         System.out.println("=== Graal.js via org.graalvm.polyglot.Context === ");
+        classPath();
+        JVMArgs();
+        mainClass();
+
         long took = 0;
         try (Context context = Context.create()) {
             context.eval(Source.newBuilder("js", SOURCE, "src.js").build());
