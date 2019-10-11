@@ -112,10 +112,24 @@ public class App {
             + "}\n";
 
     public static void main(String[] args) throws Exception {
+        assertGraalVMOrJDK11();
         benchGraalPolyglotContext();
         benchGraalScriptEngine();
         benchNashornScriptEngine();
     }
+
+    private static void assertGraalVMOrJDK11() {
+        System.out.println("Checking VM.");
+        if (System.getProperty("java.vm.name").contains("GraalVM")) {
+            return;
+        }
+        try {
+            Class.forName("java.lang.Module");
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException("Skipping the test on regular JDK8", ex);
+        }
+    }
+
 
     static long benchGraalPolyglotContext() throws IOException {
         System.out.println("=== Graal.js via org.graalvm.polyglot.Context === ");
