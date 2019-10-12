@@ -7,11 +7,13 @@ trait JUnitTests extends TestModule {
 }
 
 trait uTests extends TestModule {
-  def ivyDeps = Agg(ivy"com.lihaoyi::utest::0.6.3")
+  def ivyDeps = Agg(ivy"com.lihaoyi::utest::0.7.1")
   def testFrameworks = Seq("utest.runner.Framework")
 }
 
-object graaljs extends JavaModule {
+object graaljs extends ScalaModule {
+
+  override def scalaVersion = "2.13.1"
 
   lazy val graalvmVersion = "19.2.0.1"
   lazy val junitVersion = "4.12"
@@ -37,20 +39,9 @@ object graaljs extends JavaModule {
 
   override def forkArgs = graalArgs
 
-  /*
   object test extends Tests with uTests {
-
-    // Seems we don't need JUnit deps
-    override def ivyDeps = super.ivyDeps() ++
-      Agg(
-        ivy"org.graalvm.sdk:graal-sdk:$graalvmVersion",
-        ivy"org.graalvm.js:js:$graalvmVersion",
-        ivy"org.graalvm.js:js-scriptengine:$graalvmVersion",
-        ivy"org.graalvm.tools:profiler:$graalvmVersion",
-        ivy"org.graalvm.tools:chromeinspector:$graalvmVersion"
-      )
     override def forkArgs = graalArgs
-  }*/
+  }
 
   // mill -i inspect graaljs.test.ivyDeps
   // mill -i show graaljs.test.ivyDeps
@@ -60,6 +51,8 @@ object graaljs extends JavaModule {
   // mill -i show graaljs.test.compileClasspath
   // mill -i show graaljs.test.localClasspath
   // mill -i show graaljs.test.transitiveLocalClasspath
+  // https://github.com/lihaoyi/mill/issues/370
+  /*
   object test extends Tests with JUnitTests {
 
     /*
@@ -75,6 +68,7 @@ object graaljs extends JavaModule {
      */
     override def forkArgs = graalArgs
   }
+   */
   /*
   object test extends Tests {
     def testFrameworks = Seq("com.novocode.junit.JUnitFramework")
