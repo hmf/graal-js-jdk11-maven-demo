@@ -50,6 +50,9 @@ import org.graalvm.polyglot.Source;
 
 /**
  * Simple benchmark for Graal.js via GraalVM Polyglot Context and ScriptEngine.
+ *
+ *  mill -i graaljs.run
+ *  mill -i graaljs.test
  */
 public class App {
 
