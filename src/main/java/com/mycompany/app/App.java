@@ -47,7 +47,9 @@ import javax.script.ScriptEngine;
 import javax.script.Invocable;
 import java.io.IOException;
 import org.graalvm.polyglot.Source;
-
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
 /**
  * Simple benchmark for Graal.js via GraalVM Polyglot Context and ScriptEngine.
  */
@@ -119,6 +121,10 @@ public class App {
 
     static long benchGraalPolyglotContext() throws IOException {
         System.out.println("=== Graal.js via org.graalvm.polyglot.Context === ");
+        classPath();
+        JVMArgs();
+        mainClass();
+
         long took = 0;
         try (Context context = Context.create()) {
             context.eval(Source.newBuilder("js", SOURCE, "src.js").build());
@@ -140,6 +146,10 @@ public class App {
 
     static long benchNashornScriptEngine() throws IOException {
         System.out.println("=== Nashorn via javax.script.ScriptEngine ===");
+        classPath();
+        JVMArgs();
+        mainClass();
+
         ScriptEngine nashornEngine = new ScriptEngineManager().getEngineByName("nashorn");
         if (nashornEngine == null) {
             System.out.println("*** Nashorn not found ***");
@@ -151,6 +161,10 @@ public class App {
 
     static long benchGraalScriptEngine() throws IOException {
         System.out.println("=== Graal.js via javax.script.ScriptEngine ===");
+        classPath();
+        JVMArgs();
+        mainClass();
+
         ScriptEngine graaljsEngine = new ScriptEngineManager().getEngineByName("graal.js");
         if (graaljsEngine == null) {
             System.out.println("*** Graal.js not found ***");
@@ -180,6 +194,29 @@ public class App {
             System.out.println(ex);
         }
         return took;
+    }
+
+
+    static void classPath() {
+        String classpath = System.getProperty("java.class.path");
+        String[] classpathEntries = classpath.split(java.io.File.pathSeparator);
+        for (String x: classpathEntries){
+            System.out.println(x);
+        }
+    }
+
+    static void JVMArgs() {
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        List<String> arguments = runtimeMxBean.getInputArguments();
+        for (String x: arguments){
+            System.out.println(x);
+        }
+    }
+
+    static void mainClass() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        String mainClassName = stackTrace[stackTrace.length - 1].getClassName();
+        System.out.println(mainClassName);
     }
 
 }
