@@ -1,20 +1,22 @@
 // build.sc
-import mill._, scalalib._
+import mill._
+import os.{Path, RelPath}
+import scalalib._
 
-trait JUnitTests extends TestModule {
+trait JUnitTests extends MavenTests {
   def testFrameworks = Seq("com.novocode.junit.JUnitFramework")
-  def ivyDeps = Agg(ivy"com.novocode:junit-interface:0.11")
+  override def ivyDeps = Agg(ivy"com.novocode:junit-interface:0.11")
 }
 
-trait uTests extends TestModule {
-  def ivyDeps = Agg(ivy"com.lihaoyi::utest::0.6.3")
-  def testFrameworks = Seq("utest.runner.Framework")
-}
+// https://github.com/lihaoyi/mill/blob/master/scalalib/src/MiscModule.scala
 
-object graaljs extends JavaModule {
+object graaljs extends MavenModule {
 
   lazy val graalvmVersion = "19.2.0.1"
   lazy val junitVersion = "4.12"
+
+  //override def millSourcePath = millModuleBasePath.value  // stack overflow
+  override def millSourcePath = super.millSourcePath / os.up
 
   override def ivyDeps = Agg(
     ivy"org.graalvm.sdk:graal-sdk:$graalvmVersion",
