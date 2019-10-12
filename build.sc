@@ -26,14 +26,28 @@ object graaljs extends MavenModule {
     ivy"org.graalvm.tools:chromeinspector:$graalvmVersion"
   )
 
+  def graalToolsDeps: T[Agg[Dep]] = T {
+    Agg(
+      ivy"org.graalvm.compiler:compiler:${graalvmVersion}",    // compiler.jar
+      ivy"org.graalvm.truffle:truffle-api:${graalvmVersion}",  // truffle-api.jar
+      ivy"org.graalvm.sdk:graal-sdk:${graalvmVersion}"         // graal-sdk.jar
+    )
+  }
+
+  def graalToolsClasspath: T[Agg[PathRef]] = T {
+    resolveDeps(graalToolsDeps)
+  }
+
   lazy val graalArgs = T {
-    //val tmp = "/home/hmf/IdeaProjects/graal-js-jdk11-maven-demo/target/compiler"
-    val tmp = "/home/hmf/IdeaProjects/graal-js-jdk11-maven-demo/target/compiler/compiler.jar:/home/hmf/IdeaProjects/graal-js-jdk11-maven-demo/target/compiler/graal-sdk.jar:/home/hmf/IdeaProjects/graal-js-jdk11-maven-demo/target/compiler/truffle-api.jar"
+    val deps = graalToolsClasspath()
+    val libPaths = deps.map(_.path.toIO.getAbsolutePath)
+    val libPath = libPaths.mkString(java.io.File.pathSeparator)
+    val compiler = libPaths.filter( _.matches(".+compiler.+\\.jar")).seq.toSeq.head
     Seq(
     "-XX:+UnlockExperimentalVMOptions",
     "-XX:+EnableJVMCI",
-    s"--module-path=$tmp",
-    s"--upgrade-module-path=/home/hmf/IdeaProjects/graal-js-jdk11-maven-demo/target/compiler/compiler.jar"
+    s"--module-path=$libPath",
+    s"--upgrade-module-path=$compiler"
     )
   }
 
