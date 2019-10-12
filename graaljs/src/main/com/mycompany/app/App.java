@@ -193,6 +193,10 @@ public class App {
 
     static long benchGraalScriptEngine() throws IOException {
         System.out.println("=== Graal.js via javax.script.ScriptEngine ===");
+        classPath();
+        JVMArgs();
+        mainClass();
+
         ScriptEngine graaljsEngine = new ScriptEngineManager().getEngineByName("graal.js");
         if (graaljsEngine == null) {
             System.out.println("*** Graal.js not found ***");
