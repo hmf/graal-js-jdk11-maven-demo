@@ -50,8 +50,24 @@ import org.graalvm.polyglot.Source;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
+
 /**
  * Simple benchmark for Graal.js via GraalVM Polyglot Context and ScriptEngine.
+ *
+ * mill mill.scalalib.GenIdea/idea
+ *
+ * mill graaljs.compile
+ * mill graaljs.run
+ * mill graaljs.run noGraal
+ *
+ * mill graaljs.{compile, run}
+ * mill --watch graaljs.run
+ *
+ * mill -i graaljs.console
+ * mill -i graaljs.repl
+ *
+ * mill -i com.mycompany.app.App
+ * mill --watch com.mycompany.app.App
  */
 public class App {
 
