@@ -128,20 +128,18 @@ object graaljs extends MavenModule {
   }
 
   override def run(args: String*): Command[Unit] = T.command {
-
     super.run( setForkArgs(args):_* )
   }
 
-  override def runBackground(args: String*): Command[Unit] = {
-
+  override def runBackground(args: String*): Command[Unit] = T.command {
     super.runBackground( setForkArgs(args):_* )
   }
 
-  override def runMainBackground(mainClass: String, args: String*): Command[Unit] = {
+  override def runMainBackground(mainClass: String, args: String*): Command[Unit] = T.command {
     super.runMainBackground(mainClass, setForkArgs(args):_*)
   }
 
-  override def runMain(mainClass: String, args: String*): Command[Unit] = {
+  override def runMain(mainClass: String, args: String*): Command[Unit] = T.command {
     super.runMain(mainClass, setForkArgs(args):_*)
   }
 
