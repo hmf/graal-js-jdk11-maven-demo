@@ -140,6 +140,10 @@ object graaljs extends ScalaModule {
     super.runMain(mainClass, setForkArgs(args):_*)
   }
 
+  /**
+   * Tests fail.
+   * @see https://github.com/lihaoyi/mill/issues/716
+   */
   trait uTests extends TestModule {
     override def ivyDeps = Agg(ivy"com.lihaoyi::utest::0.7.1")
     def testFrameworks: Target[Seq[String]] = Seq("utest.runner.Framework")
