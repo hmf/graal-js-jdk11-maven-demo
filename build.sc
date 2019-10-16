@@ -141,6 +141,10 @@ object graaljs extends MavenModule {
     super.runMain(mainClass, setForkArgs(args):_*)
   }
 
+  /**
+   * Tests fail.
+   * @see https://github.com/lihaoyi/mill/issues/716
+   */
   trait JUnitTests extends MavenTests {
 
     override def testFrameworks: Target[Seq[String]] = Seq("com.novocode.junit.JUnitFramework")
