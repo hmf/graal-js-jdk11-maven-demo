@@ -4,6 +4,10 @@ import mill.define.{Command, Input, Target}
 import scalalib._
 
 /**
+ * https://github.com/oracle/graal/issues/651
+ * https://medium.com/graalvm/graalvms-javascript-engine-on-jdk11-with-high-performance-3e79f968a819
+ * https://github.com/graalvm/graal-js-jdk11-maven-demo
+ *
  * mill mill.scalalib.GenIdea/idea
  *
  * mill graaljs.compile
