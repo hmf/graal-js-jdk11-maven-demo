@@ -42,6 +42,12 @@ package com.mycompany.app
 
 import utest._
 
+/**
+ * mill -i graaljs.test
+ * mill -i graaljs.test.testLocal
+ * mill -i graaljs.test com.mycompany.app.AppUTest
+ * mill -i graaljs.test com.mycompany.app.AppUTest.testGraalPolyglotSpeed
+ */
 object AppUTest extends TestSuite {
 
     private val nashorn = App.benchNashornScriptEngine()

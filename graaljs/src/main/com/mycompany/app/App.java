@@ -53,6 +53,9 @@ import java.util.List;
 
 /**
  * Simple benchmark for Graal.js via GraalVM Polyglot Context and ScriptEngine.
+ *
+ * mill -i graaljs.runMain com.mycompany.app.App
+ * mill --watch mill -i com.mycompany.app.App
  */
 public class App {
 
