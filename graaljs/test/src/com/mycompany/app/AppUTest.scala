@@ -77,7 +77,7 @@ object AppUTest extends TestSuite {
     }
 
 
-    val tests = Tests{
+    val tests = Tests {
 
         test("testGraalPolyglotSpeed"){
             assertGraalVMOrJDK11()
